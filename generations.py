@@ -21,7 +21,7 @@ class FamilyTree(object):
         self.individual()
         plt.subplot(122)
         nx.draw(self.tree, with_labels=True, font_weight='bold') 
-
+        plt.savefig('test.png')
 
 
 
