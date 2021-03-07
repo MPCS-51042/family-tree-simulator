@@ -12,20 +12,6 @@ class FamilyTree(object):
         self.fem_names = Names().fem_names
         self.masc_names = Names().masc_names
 
-    def random_name(self):
-
-        fem_names = []
-        masc_names = []
-
-        with open('first_name_list.csv') as csvfile:
-            names = csv.reader(csvfile)
-            for row in names:
-
-                fem_names.append(row[0].lower())
-                masc_names.append(row[1].lower())
-        #print(fem_names)
-        #print(masc_names)        
-
     def individual(self):
         self.tree.add_node(0, name='new_node0')
         i = 1
