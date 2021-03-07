@@ -1,12 +1,30 @@
 import sys, os
 import networkx as nx
 import matplotlib.pyplot as plt
+import csv
+from names import Names
 
 class FamilyTree(object):
     def __init__(self, object):
         self.num_generations = object.get("num_generations")
         self.start_year = object.get("start_year")
         self.tree = nx.Graph()
+        self.fem_names = Names().fem_names
+        self.masc_names = Names().masc_names
+
+    def random_name(self):
+
+        fem_names = []
+        masc_names = []
+
+        with open('first_name_list.csv') as csvfile:
+            names = csv.reader(csvfile)
+            for row in names:
+
+                fem_names.append(row[0].lower())
+                masc_names.append(row[1].lower())
+        #print(fem_names)
+        #print(masc_names)        
 
     def individual(self):
         self.tree.add_node(0, name='new_node0')
@@ -17,7 +35,7 @@ class FamilyTree(object):
             i+=1
 
     def tree_run(self):
-
+        print(self.masc_names)
         self.individual()
         plt.subplot(122)
         nx.draw(self.tree, with_labels=True, font_weight='bold') 
