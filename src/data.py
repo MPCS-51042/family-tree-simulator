@@ -1,12 +1,13 @@
 import csv
 import os
 
-class Names():
+class Data():
 
     def __init__(self):
         self.path = os.path.dirname(os.path.abspath(__file__))
         self.fem_names, self.masc_names, self.surnames = self.names()
         self.death_rate = self.deaths()
+        self.fem_marriage_rates, self.masc_marriage_rates = self.marriages()
 
     def names(self):
         '''
@@ -24,12 +25,12 @@ class Names():
         masc_names = {}
         surnames = []
 
-        with open(self.path + '/names/surnames.csv', encoding='utf-8-sig') as scsvfile:
+        with open(self.path + '/datasets/surnames.csv', encoding='utf-8-sig') as scsvfile:
             surnames_file = csv.reader(scsvfile, delimiter = ',')
             for row in surnames_file:
                 surnames.append(row[0])
         
-        with open(self.path + '/names/masc_names.csv', encoding='utf-8-sig') as mcsvfile:
+        with open(self.path + '/datasets/masc_names.csv', encoding='utf-8-sig') as mcsvfile:
             mnames = csv.reader(mcsvfile, delimiter = ',')
             # cleaning column names for both masc_names and fem_names
             columns = []
@@ -51,9 +52,8 @@ class Names():
                     for element in row:
                         masc_names[counter].append(element)
                         counter += 1
-
            
-        with open(self.path + '/names/fem_names.csv', encoding='utf-8-sig') as fcsvfile:
+        with open(self.path + '/datasets/fem_names.csv', encoding='utf-8-sig') as fcsvfile:
             fnames = csv.reader(fcsvfile, delimiter = ',')
             # adding fem_names to data structure
             for row in fnames:
@@ -80,7 +80,7 @@ class Names():
 
     def deaths(self):
         '''
-        cretaes the death_rate datastructure for the generations.py program
+        creates the death_rate datastructure for the generations.py program
 
         INPUTS:
             none
@@ -88,13 +88,32 @@ class Names():
             death_rates (dict): dictionary of year:life expectancy values
         '''
         death_rates = {}
-        with open(self.path + "/names/death_rates.csv", encoding='utf-8-sig') as csvfile:
+        with open(self.path + "/datasets/death_rates.csv", encoding='utf-8-sig') as csvfile:
             years = csv.reader(csvfile, delimiter = ',')
             for row in years:
                 death_rates[int(row[0])] = float(row[1])
 
-
         return death_rates
+
+    def marriages(self):
+        '''
+        creates the marriage_rate datastructure for the generations.py program
+
+        INPUTS:
+            none
+        OUTPUTS:
+            fem_marriage_rates (dict): dictionary of year:life expectancy values for women
+            masc_marriage_rates (dict): dictionary of year:life expectancy values for men
+        '''
+        fem_marriage_rates = {}
+        masc_marriage_rates = {}
+        with open(self.path + '/datasets/marriage_rates.csv', encoding='utf-8-sig') as csvfile:
+            years = csv.reader(csvfile, delimiter = ',')
+            for row in years:
+                fem_marriage_rates[int(row[0])] = float(row[1])
+                masc_marriage_rates[int(row[0])] = float(row[2])
+
+        return fem_marriage_rates, masc_marriage_rates
 
 
         

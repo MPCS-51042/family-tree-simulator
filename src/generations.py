@@ -5,7 +5,7 @@ import csv
 import random
 import copy
 from numpy import random
-from names import Names
+from data import Data
 
 
 class FamilyTree(object):
@@ -25,16 +25,17 @@ class FamilyTree(object):
         self.tree.add_node(1, first_name = father_first_name, last_name = father_last_name, age = father_age, gender = "m", alive = True, birth_year = father_birthday)
         self.tree.add_edge(0,1, relation = "marriage")
 
-        # TODO: change names folder to be something like "data", change Names class to be something like "Data"
-        self.fem_names = Names().fem_names
-        self.masc_names = Names().masc_names
-        self.surnames = Names().surnames
-        self.death_rate = Names().death_rate
+        self.fem_names = Data().fem_names
+        self.masc_names = Data().masc_names
+        self.surnames = Data().surnames
+        self.death_rate = Data().death_rate
+        self.fem_marriage_rates = Data().fem_marriage_rates
+        self.masc_marriage_rates = Data().masc_marriage_rates
         self.person_id = 2
 
         # self.temp_tree is a dummy tree because it's impossible to alter the original tree
         # as we iterate through it
-        self.temp_tree = copy.deepcopy(self.tree)
+        # self.temp_tree = copy.deepcopy(self.tree)
 
     def r_first_name(self, gender):
         '''
@@ -64,6 +65,8 @@ class FamilyTree(object):
         OUTPUTS:
             last_name (str): a string representnation of a last name, properly formatted
         '''
+        # TODO: FIX
+        print(random.choice(self.surnames))
         return random.choice(self.surnames)
 
     def individual(self, relationship, relations):
@@ -81,8 +84,8 @@ class FamilyTree(object):
         '''
 
         if relationship == "marriage":
-            # need to fix age, gender should be opposite spouse, not random
-            new_age = 15 + random.choice(range(20))
+            
+            new_age = 16 + random.choice(range(20))
             gender = nx.get_node_attributes(self.tree, "gender")[relations[0]]
             if gender == "f":
                 new_gender = "m"
@@ -90,13 +93,13 @@ class FamilyTree(object):
                 new_gender = "f"
             print(gender)
             print(new_gender)
-            self.temp_tree.add_node(self.person_id, first_name = self.r_first_name(new_gender), last_name = self.r_last_name, age = new_age, gender = new_gender, alive = True, birth_year = self.year - new_age)
+            self.temp_tree.add_node(self.person_id, first_name = self.r_first_name(new_gender), last_name = self.r_last_name(), age = new_age, gender = new_gender, alive = True, birth_year = self.year - new_age)
             self.temp_tree.add_edge(relations[0], self.person_id, relation = "marriage")
 
         if relationship == "child":
             # TODO: need to fix last name to be the fathers last name
             new_gender = random.choice(["f", "m"]) 
-            self.temp_tree.add_node(self.person_id, first_name = self.r_first_name(new_gender), last_name = self.r_last_name, age = 0, gender = new_gender, alive = True, birth_year = self.year)
+            self.temp_tree.add_node(self.person_id, first_name = self.r_first_name(new_gender), last_name = self.r_last_name(), age = 0, gender = new_gender, alive = True, birth_year = self.year)
             for i in relations:
                  self.temp_tree.add_edge(i, self.person_id, relation = "child")
 
@@ -127,16 +130,29 @@ class FamilyTree(object):
             return True
         return False
  
-    def prob_marry(self):
+    def prob_marry(self, individual):
         '''
         determines whether an individual will marry. marriage rates are also modelled 
-        as a normal distribution, with a mean of 30 and a standard deviation of 5. problems
-        with this sort of model are ---- TODO: Finish
+        as a normal distribution, with a mean life expectancy for a given year, taken from
+        Statista, with a standard deviation of 10. like above, there were no immediately
+        available statistics that indicated the standard deviation of the measurements,
+        so 10 is once again arbitrary. 
+        INPUTS:
+            individual (int): the node in question
+        OUTPUTS:
+            marriage (bool): True if person gets married, False if they do not
         '''
-        # TODO: scrape data from UK website
+        present_rate = float('inf')
+        for year in self.fem_marriage_rates:
+            if year <= present_rate and year >= self.year:
+                present_rate = year
 
-        model = random.norma(30, 10, 1)
-        age = nx.get_node_attributes(self.treem, 'age')[individual]
+        age = nx.get_node_attributes(self.tree, 'age')[individual]
+        gender = nx.get_node_attributes(self.tree, 'gender')[individual]
+        if gender == 'm':
+            model = random.normal(self.masc_marriage_rates[present_rate], 5, 1)
+        if gender == 'f':
+            model = random.normal(self.fem_marriage_rates[present_rate], 5, 1)
 
         if model - age < 0:
             return True
@@ -145,57 +161,72 @@ class FamilyTree(object):
 
     def prob_birth(self):
         '''
-        determines whether a couple will conceive a child. 
+        determines whether a couple will conceive a child. i couldn't find any accurate
+        statistics for estimating this parameter, so arbitrarily decided that a given couple
+        should have a 1/4 chance of conceiving in any given year
+        INPUTS:
+            None
+        Outputs:
+            Birth (bool): True if a child is conceived, False if not
         '''
-        
-
+        return random.choice([False, False, False, True])
         
     def one_year(self):
-
         '''
-        simulates one year, modifying the self.tree attribute
+        simulates one year, modifying the self.tree attribute.
+        NEED TO FINISH THIS DESCRIPTION
         '''
         people = list(self.tree.nodes)
         alive = nx.get_node_attributes(self.tree, "alive")
         seen_edges = []
+        self.temp_tree = copy.deepcopy(self.tree)
 
         for person in people:
             if not alive[person]:
                 break
-            # TODO: need to increment all ages by 1
-            # all relationships of person  
+            # increasing age of all alive individuals by 1
+            self.temp_tree.nodes[person]['age'] = self.tree.nodes[person]['age'] + 1
             relations = self.tree.edges(person)
-            # delivers babies to married families that are expecting
+
+            # determines whether married couple have child
             not_married = len(relations)
             for relationship in relations:
-                if self.tree.edges[relationship]["relation"] == "marriage" and relationship not in seen_edges:
-                    # TODO: make sure they can't have a child w/ dead husband/wife
+                if (self.tree.edges[relationship]["relation"] == "marriage") and (relationship not in seen_edges) and (self.prob_birth()):
+                    # TODO: make sure they can't have a child w/ dead husband/wife --
                     self.individual("child", relationship)
                     seen_edges.append(relationship[::-1])
                 if self.tree.edges[relationship]["relation"] != "marriage":
                     not_married -= 1
-            if not_married == 0:
-                self.individual("marriage", [person])
-            
 
- 
+            # determines whether individual gets married in a given year
+            if not_married == 0 and self.prob_marry(person):
+                self.individual("marriage", [person])
+
+            # determines whether individual dies that year
+            if self.prob_dead(person):
+                self.temp_tree.nodes[person]['alive'] = False
+            print(self.temp_tree.nodes[person])
 
         # updating the year value, and replacing the real tree with the dummy tree
         self.year += 1
+        self.tree = None
         self.tree = copy.deepcopy(self.temp_tree)
-        #print(self.tree.nodes)
+        self.temp_tree = None
 
     def tree_run(self):
         '''
         runs the simulation
         '''
+
+        num_years = 10
+        i=0
+        while i <= num_years:
+            self.one_year()
+  
+        print(self.surnames)
+        print(self.r_last_name)
+        print(random.choice(self.surnames))
         #print(self.death_rate)
-        self.r_first_name("f")
-        self.r_last_name()
-        self.one_year()
-        self.one_year()
-        self.one_year()
-        self.prob_dead(1)
         #print(nx.get_node_attributes(self.tree, "first_name"))
         #self.individual(1,2)
         plt.subplot(122)
