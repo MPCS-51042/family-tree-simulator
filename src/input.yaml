@@ -2,7 +2,7 @@
 # inputs:
 num_generations: 10
 start_year: 1500
-father: ["first_name", "last_name", 25]
-mother: ["first_name", "last_name", 25]
+father: ["first_name", "last_name", 25, 1880]
+mother: ["first_name", "last_name", 25, 1880]
 
 
