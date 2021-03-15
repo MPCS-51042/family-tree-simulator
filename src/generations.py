@@ -237,13 +237,14 @@ class FamilyTree(object):
         #print(self.death_rate)
         #print(nx.get_node_attributes(self.tree, "first_name"))
         #self.individual(1,2)
-        plt.subplot(122)
-        A = nx.nx_agraph.to_agraph(self.tree)
-        A.layout('dot', args='-Nfontsize=10 -Nwidth=".2" -Nheight=".2" -Nmargin=0 -Gfontsize=8')
-        A.draw('test.png')
+        #plt.subplot(122)
+        #A = nx.nx_agraph.to_agraph(self.tree)
+        #A.layout('dot', args='-Nfontsize=10 -Nwidth=".2" -Nheight=".2" -Nmargin=0 -Gfontsize=8')
+        
+        #A.draw('test.png')
         #pos = hierarchy_pos
         #nx.draw(self.tree, pos=pos, with_labels=True) 
-        plt.savefig('test.png')
+        #plt.savefig('test.png')
 
         
 
