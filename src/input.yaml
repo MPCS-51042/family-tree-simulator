@@ -1,8 +1,8 @@
 ---
 # inputs:
-num_generations: 10
-start_year: 1500
-father: ["first_name", "last_name", 25, 1880]
-mother: ["first_name", "last_name", 25, 1880]
+num_years: 130
+start_year: 1880
+father: ["Bertram", "Fielding", 23, 1857]
+mother: ["Martha", "Stewart", 22, 1858]
 
 
