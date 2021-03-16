@@ -269,6 +269,8 @@ class FamilyTree(object):
             print(self.tree.edges[i])
 
         self.output_file()
+        os.system("./familytreemaker.py -a 'Martha Stewart' family_tree.txt | dot -Tpng -o test.png")
+
 
         print(self.tree.nodes)
         #print(self.death_rate)
