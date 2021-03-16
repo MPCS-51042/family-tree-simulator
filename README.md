@@ -50,12 +50,12 @@ Each married couple is represented as a pair, with their children indented below
 
 ## Sources:
 
-[Source for baby-names UK](
+[UK baby-names](
 https://webarchive.nationalarchives.gov.uk/20150908130922/http://www.ons.gov.uk/ons/publications/re-reference-tables.html?edition=tcm%3A77-243767)
 
-[Source for surnames UK](https://britishsurnames.co.uk/site/about)
+[UK surnames](https://britishsurnames.co.uk/site/about)
 
-[Source for mean average age at marriage](https://www.statista.com/statistics/557962/average-age-at-marriage-england-and-wales/)
+[UK mean age at marriage](https://www.statista.com/statistics/557962/average-age-at-marriage-england-and-wales/)
 
-[Source for UK life expectancy](https://www.statista.com/statistics/1040159/life-expectancy-united-kingdom-all-time/)
+[UK life expectancy](https://www.statista.com/statistics/1040159/life-expectancy-united-kingdom-all-time/)
 

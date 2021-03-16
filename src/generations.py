@@ -22,8 +22,10 @@ class FamilyTree(object):
         mother_last_name = object.get("mother")[1]
         mother_age = object.get("mother")[2]
         mother_birthday = object.get("father")[3]
-        self.tree.add_node(0, first_name = mother_first_name, last_name = mother_last_name, age = mother_age, gender = "f", alive = True, birth_year = mother_birthday)
-        self.tree.add_node(1, first_name = father_first_name, last_name = father_last_name, age = father_age, gender = "m", alive = True, birth_year = father_birthday)
+        self.tree.add_node(0, first_name = mother_first_name, last_name = mother_last_name, \
+        age = mother_age, gender = "f", alive = True, birth_year = mother_birthday)
+        self.tree.add_node(1, first_name = father_first_name, last_name = father_last_name, \
+        age = father_age, gender = "m", alive = True, birth_year = father_birthday)
         self.tree.add_edge(0,1, relation = "marriage")
         self.person_id = 2
 
@@ -85,7 +87,9 @@ class FamilyTree(object):
                 new_gender = "m"
             if gender == "m":
                 new_gender = "f"
-            self.temp_tree.add_node(self.person_id, first_name = self.r_first_name(new_gender), last_name = self.r_last_name(), age = new_age, gender = new_gender, alive = True, birth_year = self.year - new_age)
+            self.temp_tree.add_node(self.person_id, first_name = self.r_first_name(new_gender), \
+            last_name = self.r_last_name(), age = new_age, gender = new_gender, alive = True, \
+            birth_year = self.year - new_age)
             self.temp_tree.add_edge(relations[0], self.person_id, relation = "marriage")
 
         if relationship == "child":
@@ -95,7 +99,9 @@ class FamilyTree(object):
                 old_last_name = nx.get_node_attributes(self.tree, 'last_name')[relations[1]]
             else:
                 old_last_name = nx.get_node_attributes(self.tree, 'last_name')[relations[0]]
-            self.temp_tree.add_node(self.person_id, first_name = self.r_first_name(new_gender), last_name = old_last_name, age = 0, gender = new_gender, alive = True, birth_year = self.year)
+            self.temp_tree.add_node(self.person_id, first_name = self.r_first_name(new_gender), \
+            last_name = old_last_name, age = 0, gender = new_gender, alive = True, \
+            birth_year = self.year)
             for i in relations:
                  self.temp_tree.add_edge(i, self.person_id, relation = "child")
 
@@ -206,7 +212,8 @@ class FamilyTree(object):
             # determines whether married couple have child
             not_married = len(relations)
             for relationship in relations:
-                if (self.tree.edges[relationship]["relation"] == "marriage") and (self.prob_birth()) and gender == 'f' and age < 50:
+                if (self.tree.edges[relationship]["relation"] == "marriage") and \
+                    (self.prob_birth()) and gender == 'f' and age < 50:
                     self.individual("child", relationship)
                     seen_edges.append(relationship[::-1])
                 if self.tree.edges[relationship]["relation"] != "marriage":
@@ -263,7 +270,8 @@ class FamilyTree(object):
                 deathday = ''
                 if not livings[relationship[1]]:
                     deathday = f', deathday={birth_years[relationship[1]]+ages[relationship[1]]}'
-                if self.tree.edges[relationship]['relation'] == 'child' and mother == True and birth_years[relationship[0]] < birth_years[relationship[1]]:
+                if self.tree.edges[relationship]['relation'] == 'child' and mother == True and \
+                    birth_years[relationship[0]] < birth_years[relationship[1]]:
                     output.write(f'\t{first_names[relationship[1]]} {last_names[relationship[1]]} (id={relationship[1]}, {genders[relationship[1]].capitalize()}, birthday={birth_years[relationship[1]]}{deathday}) \n')
 
             if mother == True:
@@ -289,8 +297,11 @@ class FamilyTree(object):
             print(i)
             print(self.tree.edges[i])
         '''
+        root_firstname = nx.get_node_attributes(self.tree, 'first_name')[0]
+        root_lastname = nx.get_node_attributes(self.tree, 'last_name')[0]
+
         self.output_file()
-        os.system("./familytreemaker.py -a 'Martha Stewart' family_tree.txt | dot -Tpng -o family_tree.png")
+        os.system(f"./familytreemaker.py -a '{root_firstname} {root_lastname}' family_tree.txt | dot -Tpng -o family_tree.png")
 
 
         print(self.tree.nodes)
