@@ -20,25 +20,26 @@ mother: [<first name>, <last name>, <age at start_year>, <birth date>]
 and the text representation looks like:
 
 ```
-Martha Stewart (id=0, F, birthday=1857, deathday=1897) 
-Bertram Fielding (id=1, M, birthday=1857, deathday=1896) 
-	Eileen Fielding (id=2, F, birthday=1882, deathday=1920) 
-	Mark Fielding (id=3, M, birthday=1895, deathday=1937) 
+Martha Stewart (id=0, F, birthday=1857, deathday=1892) 
+Snoop Dogg (id=1, M, birthday=1857, deathday=1891) 
+	Morris Dogg (id=2, M, birthday=1881, deathday=1929) 
+	Lily Dogg (id=3, F, birthday=1885, deathday=1947) 
 
-Eileen Fielding (id=2, F, birthday=1882, deathday=1920) 
-Alfred Hogg (id=4, M, birthday=1882, deathday=1932) 
-	Christopher Hogg (id=5, M, birthday=1910, deathday=1968) 
+Lily Dogg (id=3, F, birthday=1885, deathday=1947) 
+Vincent Reed (id=5, M, birthday=1888, deathday=1937) 
+	Evelyn Reed (id=7, F, birthday=1921) 
 
-Dorothy Vaughan (id=6, F, birthday=1890, deathday=1949) 
-Mark Fielding (id=3, M, birthday=1895, deathday=1937) 
+Ivy Bennett (id=4, F, birthday=1881, deathday=1917) 
+Morris Dogg (id=2, M, birthday=1881, deathday=1929) 
+	Richard Dogg (id=6, M, birthday=1915) 
 
-Sheila Forbes (id=7, F, birthday=1918, deathday=1985) 
-Christopher Hogg (id=5, M, birthday=1910, deathday=1968) 
-	Sarah Hogg (id=8, F, birthday=1964, deathday=2010) 
+Evelyn Reed (id=7, F, birthday=1921) 
+Martyn Young (id=10, M, birthday=1930) 
+	Kevin Young (id=11, M, birthday=1960) 
 
-Sarah Hogg (id=8, F, birthday=1964, deathday=2010) 
-Connor Bradshaw (id=9, M, birthday=1967, deathday=2010) 
-	Benjamin Bradshaw (id=10, M, birthday=1995, deathday=2010) 
+Christina Bates (id=8, F, birthday=1906) 
+Richard Dogg (id=6, M, birthday=1915) 
+	Christopher Dogg (id=9, M, birthday=1942) 
 ```
 
 Each married couple is represented as a pair, with their children indented below.

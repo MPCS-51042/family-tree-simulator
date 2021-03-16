@@ -1,0 +1,21 @@
+Martha Stewart (id=0, F, birthday=1857, deathday=1892) 
+Snoop Dogg (id=1, M, birthday=1857, deathday=1891) 
+	Morris Dogg (id=2, M, birthday=1881, deathday=1929) 
+	Lily Dogg (id=3, F, birthday=1885, deathday=1947) 
+
+Lily Dogg (id=3, F, birthday=1885, deathday=1947) 
+Vincent Reed (id=5, M, birthday=1888, deathday=1937) 
+	Evelyn Reed (id=7, F, birthday=1921) 
+
+Ivy Bennett (id=4, F, birthday=1881, deathday=1917) 
+Morris Dogg (id=2, M, birthday=1881, deathday=1929) 
+	Richard Dogg (id=6, M, birthday=1915) 
+
+Evelyn Reed (id=7, F, birthday=1921) 
+Martyn Young (id=10, M, birthday=1930) 
+	Kevin Young (id=11, M, birthday=1960) 
+
+Christina Bates (id=8, F, birthday=1906) 
+Richard Dogg (id=6, M, birthday=1915) 
+	Christopher Dogg (id=9, M, birthday=1942) 
+

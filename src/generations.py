@@ -61,8 +61,6 @@ class FamilyTree(object):
     def r_last_name(self):
         '''
         returns a randomized surname from the source file of british surnames
-        INPUTS:
-            None
         OUTPUTS:
             last_name (str): a string representnation of a last name, properly formatted
         '''
@@ -77,8 +75,6 @@ class FamilyTree(object):
                 "marriage" or "birth"
             relations (list): a list of node identifiers of the parent or spouse
                 of the node to be added
-        OUTPUTS:
-            None
         '''
         if relationship == "marriage":
             new_age = 16 + random.choice(range(20))
@@ -170,8 +166,6 @@ class FamilyTree(object):
         statistics for estimating this parameter, so arbitrarily decided that a given couple
         should have a 1/10 chance of conceiving in any given year. while this might seem unrealistically
         low, it makes the tree sparser and easier to parse.
-        INPUTS:
-            None
         OUTPUTS:
             Birth (bool): True if a child is conceived, False if not
         '''
@@ -188,11 +182,6 @@ class FamilyTree(object):
         function to insert an appropriate node into the tree. the self.temp_tree object 
         is used as a dummy variable, as networkx graph datastructure uses dictionaries, 
         which cannot be modified mid-iteration.
-        INPUTS:
-            None
-        OUTPUTS:
-            None
-
         '''
         people = list(self.tree.nodes)
         alive = nx.get_node_attributes(self.tree, "alive")
@@ -289,19 +278,10 @@ class FamilyTree(object):
         while i <= self.num_years:
             self.one_year()
             i+=1
-        '''
-        for i in self.tree.nodes:
-            print(self.tree.nodes[i])
 
-        for i in self.tree.edges:
-            print(i)
-            print(self.tree.edges[i])
-        '''
         root_firstname = nx.get_node_attributes(self.tree, 'first_name')[0]
         root_lastname = nx.get_node_attributes(self.tree, 'last_name')[0]
 
         self.output_file()
         os.system(f"./familytreemaker.py -a '{root_firstname} {root_lastname}' family_tree.txt | dot -Tpng -o family_tree.png")
 
-
-        print(self.tree.nodes)
