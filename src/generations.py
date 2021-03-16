@@ -93,7 +93,6 @@ class FamilyTree(object):
             self.temp_tree.add_edge(relations[0], self.person_id, relation = "marriage")
 
         if relationship == "child":
-            # TODO: need to fix last name to be the fathers last name
             # the new child hsa a random gender, their father's last name, and their age is set to 0
             new_gender = random.choice(["f", "m"])
             if nx.get_node_attributes(self.tree, "gender")[relations[0]] == 'f':
@@ -192,6 +191,7 @@ class FamilyTree(object):
         for person in people:
             if not alive[person]:
                 continue
+
             # increasing age of all alive individuals by 1
             self.temp_tree.nodes[person]['age'] = self.tree.nodes[person]['age'] + 1
             relations = self.tree.edges(person)
@@ -221,6 +221,37 @@ class FamilyTree(object):
         self.year += 1
         self.tree = self.temp_tree.copy()
 
+    def output_file(self):
+        # TODO: Fix death days
+        people = self.tree
+        output = open('family_tree.txt', 'w')
+
+        # get list of all people who have married
+        for person in people:
+            mother = False
+            relations = self.tree.edges(person)
+            gender = nx.get_node_attributes(people, 'gender')[person]
+            first_names = nx.get_node_attributes(people, 'first_name')
+            last_names = nx.get_node_attributes(people, 'last_name')
+            genders = nx.get_node_attributes(people, 'gender')
+            birth_years = nx.get_node_attributes(people, 'birth_year')
+            ages = nx.get_node_attributes(people, 'age')
+            livings = nx.get_node_attributes(people, 'alive')
+            for relationship in relations:
+                if self.tree.edges[relationship]['relation'] == 'marriage' and gender == 'f':
+                    mother = True
+                    #output.write(str(people.nodes[person]) + '\n')
+                    output.write(f'{first_names[person]} {last_names[person]} (id={person}, {genders[person].capitalize()}, birthday={birth_years[person]}, deathday={birth_years[person]+ages[person]}) \n')
+                    #output.write(str(people.nodes[relationship[1]]) + '\n')
+                    output.write(f'{first_names[relationship[1]]} {last_names[relationship[1]]} (id={relationship[1]}, {genders[relationship[1]].capitalize()}, birthday={birth_years[relationship[1]]}, deathday={birth_years[relationship[1]]+ages[relationship[1]]}) \n')
+            for relationship in relations:
+                if self.tree.edges[relationship]['relation'] == 'child' and mother == True and birth_years[relationship[0]] < birth_years[relationship[1]]:
+                    #output.write('        ' + str(relationship) + '\n')
+                    #output.write('        ' + str(people.nodes[relationship[1]]) + '\n')
+                    output.write(f'\t{first_names[relationship[1]]} {last_names[relationship[1]]} (id={relationship[1]}, {genders[relationship[1]].capitalize()}, birthday={birth_years[relationship[1]]}, deathday={birth_years[relationship[1]]+ages[relationship[1]]}) \n')
+            if mother == True:
+                output.write('\n')
+
     def tree_run(self):
         '''
         runs the simulation
@@ -232,6 +263,12 @@ class FamilyTree(object):
 
         for i in self.tree.nodes:
             print(self.tree.nodes[i])
+
+        for i in self.tree.edges:
+            print(i)
+            print(self.tree.edges[i])
+
+        self.output_file()
 
         print(self.tree.nodes)
         #print(self.death_rate)

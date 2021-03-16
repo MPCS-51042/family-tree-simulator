@@ -50,7 +50,7 @@ class Data():
                         counter += 1
                 else:
                     for element in row:
-                        masc_names[counter].append(element)
+                        masc_names[counter].append(element.title())
                         counter += 1
            
         with open(self.path + '/datasets/fem_names.csv', encoding='utf-8-sig') as fcsvfile:
@@ -64,7 +64,7 @@ class Data():
                         counter += 1
                 else:
                     for element in row:
-                        fem_names[counter].append(element)
+                        fem_names[counter].append(element.title())
                         counter += 1
 
         # just a little more cleaning of the dataset to make the format nice and readable
