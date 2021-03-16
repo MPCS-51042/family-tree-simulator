@@ -1,6 +1,5 @@
 import sys, os
 import networkx as nx
-import matplotlib.pyplot as plt
 import csv
 import random
 import copy
@@ -11,6 +10,7 @@ from data import Data
 
 class FamilyTree(object):
     def __init__(self, object):
+        # initializing the tree object from input.yaml
         self.tree = nx.Graph()
         self.num_years = object.get("num_years")
         self.year = int(object.get("start_year"))
@@ -25,18 +25,15 @@ class FamilyTree(object):
         self.tree.add_node(0, first_name = mother_first_name, last_name = mother_last_name, age = mother_age, gender = "f", alive = True, birth_year = mother_birthday)
         self.tree.add_node(1, first_name = father_first_name, last_name = father_last_name, age = father_age, gender = "m", alive = True, birth_year = father_birthday)
         self.tree.add_edge(0,1, relation = "marriage")
+        self.person_id = 2
 
+        # initializing name/demographic datasets
         self.fem_names = Data().fem_names
         self.masc_names = Data().masc_names
         self.surnames = Data().surnames
         self.death_rate = Data().death_rate
         self.fem_marriage_rates = Data().fem_marriage_rates
         self.masc_marriage_rates = Data().masc_marriage_rates
-        self.person_id = 2
-
-        # self.temp_tree is a dummy tree because it's impossible to alter the original tree
-        # as we iterate through it
-        # self.temp_tree = copy.deepcopy(self.tree)
 
     def r_first_name(self, gender):
         '''
@@ -62,7 +59,8 @@ class FamilyTree(object):
     def r_last_name(self):
         '''
         returns a randomized surname from the source file of british surnames
-
+        INPUTS:
+            None
         OUTPUTS:
             last_name (str): a string representnation of a last name, properly formatted
         '''
@@ -77,12 +75,10 @@ class FamilyTree(object):
                 "marriage" or "birth"
             relations (list): a list of node identifiers of the parent or spouse
                 of the node to be added
-
         OUTPUTS:
-            nothing
+            None
         '''
         if relationship == "marriage":
-            # TODO: Fix age calculation
             new_age = 16 + random.choice(range(20))
             gender = nx.get_node_attributes(self.tree, "gender")[relations[0]]
             if gender == "f":
@@ -170,7 +166,7 @@ class FamilyTree(object):
         low, it makes the tree sparser and easier to parse.
         INPUTS:
             None
-        Outputs:
+        OUTPUTS:
             Birth (bool): True if a child is conceived, False if not
         '''
         sample = bernoulli.rvs(.1, size=1)
@@ -180,8 +176,17 @@ class FamilyTree(object):
 
     def one_year(self):
         '''
-        simulates one year, modifying the self.tree attribute.
-        NEED TO FINISH THIS DESCRIPTION
+        simulates one year, modifying the self.tree attribute. increments the age of all
+        alive individuals by one, calls probability functions to determine whether 
+        individuals die, have chilren, or get married, and then calls the self.individual()
+        function to insert an appropriate node into the tree. the self.temp_tree object 
+        is used as a dummy variable, as networkx graph datastructure uses dictionaries, 
+        which cannot be modified mid-iteration.
+        INPUTS:
+            None
+        OUTPUTS:
+            None
+
         '''
         people = list(self.tree.nodes)
         alive = nx.get_node_attributes(self.tree, "alive")
@@ -202,7 +207,6 @@ class FamilyTree(object):
             not_married = len(relations)
             for relationship in relations:
                 if (self.tree.edges[relationship]["relation"] == "marriage") and (self.prob_birth()) and gender == 'f' and age < 50:
-                    # TODO: make sure they can't have a child w/ dead husband/wife --
                     self.individual("child", relationship)
                     seen_edges.append(relationship[::-1])
                 if self.tree.edges[relationship]["relation"] != "marriage":
@@ -222,7 +226,10 @@ class FamilyTree(object):
         self.tree = self.temp_tree.copy()
 
     def output_file(self):
-        # TODO: Fix death days
+        '''
+        outputs the self.tree in a .txt file format. couples are written on 
+        '''
+
         people = self.tree
         output = open('family_tree.txt', 'w')
 
@@ -237,54 +244,53 @@ class FamilyTree(object):
             birth_years = nx.get_node_attributes(people, 'birth_year')
             ages = nx.get_node_attributes(people, 'age')
             livings = nx.get_node_attributes(people, 'alive')
+
+            # formats and writes married couple nodes
             for relationship in relations:
                 if self.tree.edges[relationship]['relation'] == 'marriage' and gender == 'f':
                     mother = True
-                    #output.write(str(people.nodes[person]) + '\n')
-                    output.write(f'{first_names[person]} {last_names[person]} (id={person}, {genders[person].capitalize()}, birthday={birth_years[person]}, deathday={birth_years[person]+ages[person]}) \n')
-                    #output.write(str(people.nodes[relationship[1]]) + '\n')
-                    output.write(f'{first_names[relationship[1]]} {last_names[relationship[1]]} (id={relationship[1]}, {genders[relationship[1]].capitalize()}, birthday={birth_years[relationship[1]]}, deathday={birth_years[relationship[1]]+ages[relationship[1]]}) \n')
+                    deathday = ''
+                    if not livings[person]:
+                        deathday = f', deathday={birth_years[person]+ages[person]}'
+                    output.write(f'{first_names[person]} {last_names[person]} (id={person}, {genders[person].capitalize()}, birthday={birth_years[person]}{deathday}) \n')
+                    deathday = ''
+                    if not livings[relationship[1]]:
+                        deathday = f', deathday={birth_years[relationship[1]]+ages[relationship[1]]}'
+                    output.write(f'{first_names[relationship[1]]} {last_names[relationship[1]]} (id={relationship[1]}, {genders[relationship[1]].capitalize()}, birthday={birth_years[relationship[1]]}{deathday}) \n')
+
+            # formats and writes nodes of children
             for relationship in relations:
+                deathday = ''
+                if not livings[relationship[1]]:
+                    deathday = f', deathday={birth_years[relationship[1]]+ages[relationship[1]]}'
                 if self.tree.edges[relationship]['relation'] == 'child' and mother == True and birth_years[relationship[0]] < birth_years[relationship[1]]:
-                    #output.write('        ' + str(relationship) + '\n')
-                    #output.write('        ' + str(people.nodes[relationship[1]]) + '\n')
-                    output.write(f'\t{first_names[relationship[1]]} {last_names[relationship[1]]} (id={relationship[1]}, {genders[relationship[1]].capitalize()}, birthday={birth_years[relationship[1]]}, deathday={birth_years[relationship[1]]+ages[relationship[1]]}) \n')
+                    output.write(f'\t{first_names[relationship[1]]} {last_names[relationship[1]]} (id={relationship[1]}, {genders[relationship[1]].capitalize()}, birthday={birth_years[relationship[1]]}{deathday}) \n')
+
             if mother == True:
                 output.write('\n')
 
-    def tree_run(self):
+        output.close()
+
+    def main(self):
         '''
-        runs the simulation
+        runs the simulation, calling self.one_year self.num_years times. writes
+        the tree data to the output file, and then calls familytreemaker to
+        create the .png image representation of the tree
         '''
         i=0
         while i <= self.num_years:
             self.one_year()
             i+=1
-
+        '''
         for i in self.tree.nodes:
             print(self.tree.nodes[i])
 
         for i in self.tree.edges:
             print(i)
             print(self.tree.edges[i])
-
+        '''
         self.output_file()
-        os.system("./familytreemaker.py -a 'Martha Stewart' family_tree.txt | dot -Tpng -o test.png")
+        os.system("./familytreemaker.py -a 'Martha Stewart' family_tree.txt | dot -Tpng -o family_tree.png")
 
 
         print(self.tree.nodes)
-        #print(self.death_rate)
-        #print(nx.get_node_attributes(self.tree, "first_name"))
-        #self.individual(1,2)
-        #plt.subplot(122)
-        #A = nx.nx_agraph.to_agraph(self.tree)
-        #A.layout('dot', args='-Nfontsize=10 -Nwidth=".2" -Nheight=".2" -Nmargin=0 -Gfontsize=8')
-        
-        #A.draw('test.png')
-        #pos = hierarchy_pos
-        #nx.draw(self.tree, pos=pos, with_labels=True) 
-        #plt.savefig('test.png')
-
-        
-
-

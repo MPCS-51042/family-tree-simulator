@@ -1,4 +1,5 @@
 # A Random Family Tree Generator and Vizualizer
+* Note that the visualization portion of this project is taken from Adrien Verge's familytreemaker repo (https://github.com/adrienverge/familytreemaker). Many thanks.
 
 ## Installation:
 
@@ -14,7 +15,7 @@ mother: [<first name>, <last name>, <age at start_year>, <birth date>]
 ```
 * In the `src` directory, run the command `python3 runner.py`. This creates a .txt file representation of the family tree (`family_tree.txt`), as well as a (`family_tree.png`) file image of the family tree. The tree looks like:
 
-![Test Image 6](/src/test.png)
+![Test Image 6](/src/family_tree.png)
 
 and the text representation looks like:
 
