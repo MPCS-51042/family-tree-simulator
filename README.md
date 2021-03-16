@@ -16,7 +16,31 @@ mother: [<first name>, <last name>, <age at start_year>, <birth date>]
 
 ![Test Image 6](/src/test.png)
 
+and the text representation looks like:
 
+```
+Martha Stewart (id=0, F, birthday=1857, deathday=1897) 
+Bertram Fielding (id=1, M, birthday=1857, deathday=1896) 
+	Eileen Fielding (id=2, F, birthday=1882, deathday=1920) 
+	Mark Fielding (id=3, M, birthday=1895, deathday=1937) 
+
+Eileen Fielding (id=2, F, birthday=1882, deathday=1920) 
+Alfred Hogg (id=4, M, birthday=1882, deathday=1932) 
+	Christopher Hogg (id=5, M, birthday=1910, deathday=1968) 
+
+Dorothy Vaughan (id=6, F, birthday=1890, deathday=1949) 
+Mark Fielding (id=3, M, birthday=1895, deathday=1937) 
+
+Sheila Forbes (id=7, F, birthday=1918, deathday=1985) 
+Christopher Hogg (id=5, M, birthday=1910, deathday=1968) 
+	Sarah Hogg (id=8, F, birthday=1964, deathday=2010) 
+
+Sarah Hogg (id=8, F, birthday=1964, deathday=2010) 
+Connor Bradshaw (id=9, M, birthday=1967, deathday=2010) 
+	Benjamin Bradshaw (id=10, M, birthday=1995, deathday=2010) 
+```
+
+Each married couple is represented as a pair, with their children indented below.
 
 
 
