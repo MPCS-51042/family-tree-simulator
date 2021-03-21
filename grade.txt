@@ -1,0 +1,9 @@
+Rubric
+Functionality: 40/40
+Style: 25/30 
+Scope/Logic: 5/10 Code isn’t using actual data but is generating the data
+Scope was not covered in class:10/10
+Presentation: 10/10
+
+Notes: Nice work! The data analysis here is solid, and your trees look great. 5 point deduction on style because some of the methods are pretty large and it would be tough to follow exactly what's happening in each one; breaking it into some smaller methods or even extracting helper files would have been helpful there. but overall, great job!
+Total: 90/100
